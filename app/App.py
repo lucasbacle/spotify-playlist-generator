@@ -5,7 +5,7 @@ import GraphicalUserInterface
 class App:
 
     def __init__(self):
-        print("LOL :)")
+        print()
 
 if __name__ == '__main__':
     app = App()
