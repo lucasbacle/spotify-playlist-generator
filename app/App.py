@@ -1,11 +1,13 @@
-import SearchEngine
-import BluetoothManager
-import GraphicalUserInterface
+from SearchEngine import SearchEngine
+from BluetoothManager import BluetoothManager
+from GraphicalUserInterface import GraphicalUserInterface
 
 class App:
 
     def __init__(self):
-        print("LOL :)")
+        BluetoothManager()
+        GraphicalUserInterface()
+        SearchEngine("Leo&Lucas")
 
 if __name__ == '__main__':
     app = App()

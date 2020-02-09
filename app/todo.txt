@@ -1,0 +1,6 @@
+SearchEngine:
+
+- authentification avec Spotify : OK
+- rechercher des morceaux : OK
+- trouver des recommandations : OK
+- inventer des paramètres et générer une bonne recherche
