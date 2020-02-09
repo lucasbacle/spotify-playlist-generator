@@ -1,2 +1,2 @@
 # experience
-Experience is a multi-sensorial project that aim to make you travel through sound, smells and light.
+Experience is a multi-sensorial project that aims to make you travel through sound, smells, and light.
