@@ -1,20 +1,8 @@
 import os
-import spotipy
-import spotipy.util as util
 import random
 
-"""
-" Return currently playing device "
-def getDevicesId():
-    devices = self.spotifyObject.devices()
-    return devices['devices'][0]['id']
-
-" Return currently playing track "
-def getTrackPlaying():
-    track = self.spotifyObject.current_user_playing_track()
-    return track
-"""
-
+# for testing purposes only:
+from SpotifyManager import SpotifyManager
 
 class SearchEngine:
 
@@ -32,20 +20,12 @@ class SearchEngine:
         "timesignature": []
     }
 
-    """ Return a Spotify object """
+    def __init__(self, spotifyObject):
+        self.spotifyObject = spotifyObject
 
-    def authorizeSpotify(self, username):
-        scope = 'user-read-private user-read-email user-top-read user-read-playback-state user-modify-playback-state'
-
-        try:
-            token = util.prompt_for_user_token(username, scope, client_id='2ad3077e3bae46dca57d12a9eefd7239',
-                                               client_secret='e4fc9fefe8cc4d918e80da6fc62b0fc3', redirect_uri='http://localhost/')
-        except (AttributeError):
-            os.remove(f".cache-{username}")
-            token = util.prompt_for_user_token(username, scope, client_id='2ad3077e3bae46dca57d12a9eefd7239',
-                                               client_secret='e4fc9fefe8cc4d918e80da6fc62b0fc3', redirect_uri='http://localhost/')
-
-        return spotipy.Spotify(auth=token)
+        self.user = self.spotifyObject.current_user()
+        self.userTopArtists = self.getTopArtists()
+        self.userTopTracks = self.getTopTracks()
 
     """ Convert engine parameters to features understandable by Spotify API """
 
@@ -79,7 +59,6 @@ class SearchEngine:
     """ Return a list of related tracks uri """
 
     def getSimilarTracks(self):
-
         pass
 
     """ Return a list of related artists uri """
@@ -102,7 +81,7 @@ class SearchEngine:
         rand.shuffle(self.userTopArtists)
         rand.shuffle(self.userTopTracks)
 
-        # - user preferences        
+        # - user preferences
         seed['artists'].append(self.userTopArtists[0])
         seed['tracks'].append(self.userTopArtists[0])
 
@@ -114,8 +93,14 @@ class SearchEngine:
 
         return seed
 
-    def getTracksByFeatures(self):
+    def getTracksByParameters(self, a, b, c, d):
+
+        # generate the proper seed of artists, tracks & genre
         seed = self.generateSeed()
+
+        # process the parameters
+
+        # query Spotify
         tracks = self.spotifyObject.recommendations(
             seed_artists=seed['artists'],
             seed_genres=seed['genres'],
@@ -124,37 +109,8 @@ class SearchEngine:
             country=self.user['country']
         )
 
+        # prepare a list containing the uris
         result = []
         for track in tracks['tracks']:
-            print(track['artists'][0]['name'] + " - " + track['name'])
             result.append(track['uri'])
         return result
-
-    def create_playlist(self, song_list):
-        pass
-
-    def __init__(self, username):
-        self.spotifyObject = self.authorizeSpotify(username)
-        self.user = self.spotifyObject.current_user()
-        self.userTopArtists = self.getTopArtists()
-        self.userTopTracks = self.getTopTracks()
-
-        # Test code
-        query = ""
-        while not (query == "stop"):
-            query = input("Que recherches-tu ? ")
-
-            if (query == "recommandations"):
-                self.getTracksByFeatures()
-
-            elif (query != ""):
-                track = self.spotifyObject.search(query, limit=1, type='track')[
-                    'tracks']['items'][0]
-
-                artist = track['artists'][0]['name']
-                title = track['name']
-                print("Spotify > " + artist + " - " + title)
-                print("Spotify > Enjoy :)")
-
-                uri = track['uri']
-                self.spotifyObject.start_playback(uris=[uri])
