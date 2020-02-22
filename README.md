@@ -7,9 +7,9 @@ To deploy the app, you need to :
     python3 -m venv venv
 
 2) Activate the virtual environment:
-  On Mac/Linux:
+- On Mac/Linux:
     source venv/bin/activate
-  On Windows:
+- On Windows:
     call venv\scripts\activate.bat
 
 3) Install the required libraries (most notably, fbs and PyQt5):
