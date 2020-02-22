@@ -4,6 +4,7 @@ import random
 # for testing purposes only:
 from SpotifyManager import SpotifyManager
 
+
 class SearchEngine:
 
     featuresDictionnary = {
@@ -93,20 +94,27 @@ class SearchEngine:
 
         return seed
 
-    def getTracksByParameters(self, a, b, c, d):
+    def getTracksByParameters(self, valence, danceability, tempo):
 
         # generate the proper seed of artists, tracks & genre
         seed = self.generateSeed()
 
         # process the parameters
-
+        print("Parameters: ")
+        print(valence)
+        print(danceability)
+        print(tempo)
+        
         # query Spotify
         tracks = self.spotifyObject.recommendations(
             seed_artists=seed['artists'],
             seed_genres=seed['genres'],
             seed_tracks=seed['tracks'],
             limit=50,
-            country=self.user['country']
+            country=self.user['country'],
+            target_valence=valence,
+            target_danceability=danceability,
+            target_tempo = tempo
         )
 
         # prepare a list containing the uris
