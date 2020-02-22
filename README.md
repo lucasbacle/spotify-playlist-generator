@@ -14,3 +14,6 @@ To deploy the app, you need to :
 
 3) Install the required libraries (most notably, fbs and PyQt5):
     pip install fbs PyQt5==5.9.2 pyinstaller==3.4
+
+4) Run the app :
+    fbs run
