@@ -1,11 +1,8 @@
-import os
 import random
-
-# for testing purposes only:
-from SpotifyManager import SpotifyManager
 
 
 class SearchEngine:
+    "This class represent our custom spotify search-engine"
 
     featuresDictionnary = {
         "acousticness": [],
@@ -21,70 +18,38 @@ class SearchEngine:
         "timesignature": []
     }
 
-    def __init__(self, spotifyObject):
-        self.spotifyObject = spotifyObject
+    def __init__(self, sm):
+        self.spotify_manager = sm
+        self.user_top_artists = None
+        self.user_top_tracks = None
+        self.user_top_genres = None
 
-        self.user = self.spotifyObject.current_user()
-        self.userTopArtists = self.getTopArtists()
-        self.userTopTracks = self.getTopTracks()
+    def initialize(self):
+        self.user_top_artists = self.spotify_manager.get_top_artists()
+        self.user_top_tracks = self.spotify_manager.get_top_tracks()
+        self.user_top_genres = self.spotify_manager.get_top_genres()
 
-    """ Convert engine parameters to features understandable by Spotify API """
+    def raw_to_features(self):
+        "Convert engine parameters to features understandable by Spotify API"
 
-    def rawToFeatures(self):
-        pass
+    def generate_seed(self):
+        "Generate a good seed to use in the following search"
 
-    """ Return current user's top 5 favourite tracks id """
-
-    def getTopTracks(self):
-        result = []
-
-        favTracks = self.spotifyObject.current_user_top_tracks(limit=5)[
-            "items"]
-        for track in favTracks:
-            result.append(track["id"])
-
-        return result
-
-    """ Return current user's top 5 favourite artists id """
-
-    def getTopArtists(self):
-        result = []
-
-        favArtists = self.spotifyObject.current_user_top_artists(limit=5)[
-            "items"]
-        for artist in favArtists:
-            result.append(artist["id"])
-
-        return result
-
-    """ Return a list of related tracks uri """
-
-    def getSimilarTracks(self):
-        pass
-
-    """ Return a list of related artists uri """
-
-    def getSimilarArtists(self, a_id):
-        related = self.spotifyObject.artist_related_artists(artist_id=a_id)
-        result = []
-
-        for artist in related['artists']:
-            result += artist['uri']
-
-        return result
-
-    def generateSeed(self):
         seed = {'artists': [], 'tracks': [], 'genres': []}
 
         # seed consists of :
-        # - a bit of randomness
-        rand = random.Random()
-        rand.shuffle(self.userTopArtists)
-        rand.shuffle(self.userTopTracks)
 
         # - user preferences
-        seed['artists'].append(self.userTopArtists[0])
-        seed['tracks'].append(self.userTopArtists[0])
+        genres = self.user_top_genres
+        tracks = self.user_top_tracks
+
+        # - a bit of randomness
+        rand = random.Random()
+        rand.shuffle(genres)
+        rand.shuffle(tracks)
+
+        #seed['genres'].append(genres[0])
+        seed['tracks'] = tracks
 
         # - developer preferences
         # TODO
@@ -94,31 +59,23 @@ class SearchEngine:
 
         return seed
 
-    def getTracksByParameters(self, valence, danceability, tempo):
+    def get_tracks_by_parameters(self, valence, danceability, tempo):
+        "Returns a playlist based on the search parameters and user preferences"
 
         # generate the proper seed of artists, tracks & genre
-        seed = self.generateSeed()
+        seed = self.generate_seed()
 
         # process the parameters
         print("Parameters: ")
-        print(valence)
-        print(danceability)
-        print(tempo)
-        
+        print("Valence : ", valence)
+        print("Danceability : ", danceability)
+        print("Tempo : ", tempo)
+
         # query Spotify
-        tracks = self.spotifyObject.recommendations(
-            seed_artists=seed['artists'],
-            seed_genres=seed['genres'],
-            seed_tracks=seed['tracks'],
-            limit=50,
-            country=self.user['country'],
-            target_valence=valence,
-            target_danceability=danceability,
-            target_tempo = tempo
-        )
+        tracks = self.spotify_manager.get_recommendations(seed, valence, danceability, tempo)['tracks']
 
         # prepare a list containing the uris
         result = []
-        for track in tracks['tracks']:
+        for track in tracks:
             result.append(track['uri'])
         return result

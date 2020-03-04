@@ -39,7 +39,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="loginPage">
        <layout class="QGridLayout" name="gridLayout">
@@ -122,7 +122,7 @@
 	border-radius: 5px;
 }</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0">
+          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0">
            <property name="sizeConstraint">
             <enum>QLayout::SetFixedSize</enum>
            </property>
@@ -139,6 +139,19 @@
             <number>20</number>
            </property>
            <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap>images/Icon.png</pixmap>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QLabel" name="title">
              <property name="text">
               <string/>
@@ -152,22 +165,9 @@
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="subtitle">
-             <property name="text">
-              <string>A multisensorial experiment.</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="centralSpacer">
+            <spacer name="verticalSpacer">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Expanding</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -205,19 +205,6 @@
               <string>Log In</string>
              </property>
             </widget>
-           </item>
-           <item>
-            <spacer name="centralSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
            </item>
           </layout>
          </widget>
@@ -444,6 +431,16 @@ QSlider {
 	color: rgb(154, 154, 154);
 }
 
+QListWidget {
+	background-color: rgb(18, 18, 18);
+}
+
+QListView::item::selected {
+	color: white;
+	background-color: transparent;
+	border: none;
+}
+
 QPushButton {
 	border-width: 2px;
 	border-style: hidden;
@@ -455,6 +452,7 @@ QPushButton:hover {
 }
 
 QScrollBar:vertical {
+	background-color: rgb(18, 18, 18);
     border: none;
 	width: 12px;
 }
@@ -493,7 +491,12 @@ QScrollBar::sub-line:vertical {
         <item row="0" column="0" rowspan="2">
          <widget class="QFrame" name="menuFrame">
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(3,3,3);</string>
+           <string notr="true">QWidget {
+	background-color: rgb(3,3,3);
+}
+QPushButton {
+	text-align:left;
+}</string>
           </property>
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
@@ -598,52 +601,6 @@ Léo Couderc &amp; Lucas Baclé</string>
             </widget>
            </item>
           </layout>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QListWidget" name="listWidget">
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(18, 18, 18);</string>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Plain</enum>
-          </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-          <property name="autoScroll">
-           <bool>true</bool>
-          </property>
-          <property name="alternatingRowColors">
-           <bool>false</bool>
-          </property>
-          <property name="textElideMode">
-           <enum>Qt::ElideRight</enum>
-          </property>
-          <property name="isWrapping" stdset="0">
-           <bool>false</bool>
-          </property>
-          <property name="layoutMode">
-           <enum>QListView::SinglePass</enum>
-          </property>
-          <property name="spacing">
-           <number>5</number>
-          </property>
-          <property name="viewMode">
-           <enum>QListView::ListMode</enum>
-          </property>
-          <property name="modelColumn">
-           <number>0</number>
-          </property>
-          <property name="uniformItemSizes">
-           <bool>false</bool>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
          </widget>
         </item>
         <item row="1" column="1">
@@ -752,6 +709,12 @@ Léo Couderc &amp; Lucas Baclé</string>
               <iconset>
                <normaloff>images/previous.png</normaloff>images/previous.png</iconset>
              </property>
+             <property name="iconSize">
+              <size>
+               <width>14</width>
+               <height>14</height>
+              </size>
+             </property>
             </widget>
            </item>
            <item>
@@ -791,6 +754,12 @@ Léo Couderc &amp; Lucas Baclé</string>
              <property name="icon">
               <iconset>
                <normaloff>images/next.png</normaloff>images/next.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>14</width>
+               <height>14</height>
+              </size>
              </property>
             </widget>
            </item>
@@ -842,6 +811,57 @@ Léo Couderc &amp; Lucas Baclé</string>
           </layout>
          </widget>
         </item>
+        <item row="0" column="1">
+         <widget class="QListWidget" name="listWidget">
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="autoScroll">
+           <bool>true</bool>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>false</bool>
+          </property>
+          <property name="textElideMode">
+           <enum>Qt::ElideRight</enum>
+          </property>
+          <property name="isWrapping" stdset="0">
+           <bool>false</bool>
+          </property>
+          <property name="layoutMode">
+           <enum>QListView::SinglePass</enum>
+          </property>
+          <property name="spacing">
+           <number>5</number>
+          </property>
+          <property name="viewMode">
+           <enum>QListView::ListMode</enum>
+          </property>
+          <property name="modelColumn">
+           <number>0</number>
+          </property>
+          <property name="uniformItemSizes">
+           <bool>false</bool>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          <item>
+           <property name="text">
+            <string>Nouvel élément</string>
+           </property>
+          </item>
+         </widget>
+        </item>
        </layout>
       </widget>
      </widget>
@@ -850,5 +870,22 @@ Léo Couderc &amp; Lucas Baclé</string>
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>usernameLineEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>loginButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>383</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>388</x>
+     <y>292</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
