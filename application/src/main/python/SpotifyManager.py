@@ -1,59 +1,53 @@
-import os
 import heapq
+from datetime import date
 import requests
 import spotipy
 import spotipy.util as util
 
-from datetime import date
+from SpotifyOAuth import SpotifyCodeFlowManager
 
 
 class SpotifyManager:
 
     client_id = '2ad3077e3bae46dca57d12a9eefd7239'
     client_secret = 'e4fc9fefe8cc4d918e80da6fc62b0fc3'
+    redirect_uri = "http://localhost:8000/"
 
-    scope = ("user-read-private "
-             "user-read-email "
-             "playlist-modify-private "
-             "user-top-read "
-             "user-read-playback-state "
-             "user-modify-playback-state")
+    scopes = ("user-read-private "
+              "user-read-email "
+              "playlist-modify-private "
+              "user-top-read "
+              "user-read-playback-state "
+              "user-modify-playback-state")
 
     def __init__(self):
         self.spotify_object = None
         self.current_user = None
+        self.spotify_oauth_manager = None
 
     # Auth-related stuff
 
     def authorize(self, username):
-        try:
-            token = util.prompt_for_user_token(
-                username,
-                self.scope,
-                client_id=self.client_id,
-                client_secret=self.client_secret,
-                redirect_uri='http://localhost:8000/'
-            )
-        except AttributeError:
-            os.remove(f".cache-{username}")
-            token = util.prompt_for_user_token(
-                username,
-                self.scope,
-                client_id=self.client_id,
-                client_secret=self.client_secret,
-                redirect_uri='http://localhost:8000/'
-            )
+        self.spotify_oauth_manager = SpotifyCodeFlowManager(
+            client_id=SpotifyManager.client_id,
+            client_secret=SpotifyManager.client_secret,
+            redirect_uri=SpotifyManager.redirect_uri,
+            scope=SpotifyManager.scopes,
+            username=username
+        )
+
+        token = util.prompt_for_user_token(
+            username=username,
+            oauth_manager=self.spotify_oauth_manager
+        )
 
         self.spotify_object = spotipy.Spotify(auth=token)
-        self.current_user = self.spotify_object.current_user()
+        self.current_user = self.spotify_object.me()
 
     def is_authorized(self):
         return self.spotify_object is not None
 
     # User-related stuff
-
-    def set_current_user(self):
-        self.current_user = self.spotify_object.current_user()
 
     def get_current_user_name(self):
         return self.current_user['display_name']
@@ -219,16 +213,15 @@ class SpotifyManager:
     def is_playing(self):
         playback_state = self.spotify_object.current_playback()
         return bool(playback_state['is_playing'])
-    
+
     def song_remaining_duration(self):
         "return the remaining song duration in ms"
-        
+
         current_playing_track = self.spotify_object.current_user_playing_track()
         position = int(current_playing_track['progress_ms'])
         length = int(current_playing_track['item']['duration_ms'])
 
         return (length - position)
-
 
     def start_playback(self):
         self.spotify_object.start_playback()
