@@ -57,4 +57,4 @@ class PlayerViewController():
         if raw_cover is not None:
             pix.loadFromData(raw_cover)
 
-        self.view.coverLabel.setPixmap(pix.scaledToHeight(40))
+        self.view.coverLabel.setPixmap(pix.scaledToHeight(45))
